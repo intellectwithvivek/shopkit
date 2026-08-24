@@ -1,0 +1,106 @@
+# ShopKit
+
+> A free, open-source Next.js 16 e-commerce template: a 16-product lifestyle-goods
+> store with a cart drawer, ⌘K product search, faceted filters, sparkline charts and a
+> four-step mock checkout. MIT licensed.
+
+Site: https://shopkit.vivekkumarsingh.in
+Source: https://github.com/intellectwithvivek/shopkit
+Licence: MIT
+
+Built with VivekUI (@the_viveksingh/vivek-ui), a free React component library with zero runtime dependencies, by Vivek Kumar Singh.
+
+- Docs: https://ui.vivekkumarsingh.in/docs
+- npm: https://www.npmjs.com/package/@the_viveksingh/vivek-ui
+- GitHub: https://github.com/intellectwithvivek/vivek_UI
+- Author: https://vivekkumarsingh.in/
+
+## Using this template
+
+It is free and open source. Three ways to start:
+
+1. Create your own repository from it (no git history attached):
+   https://github.com/intellectwithvivek/shopkit/generate
+2. Clone it:
+   git clone https://github.com/intellectwithvivek/shopkit.git
+   cd shopkit && npm install && npm run dev
+3. Deploy it straight to Vercel:
+   https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fintellectwithvivek%2Fshopkit
+
+There is nothing to configure — no environment variables, no database, no API keys. The
+one value worth changing is SITE_URL in lib/site.ts, which every canonical URL, the
+sitemap, robots.txt and all JSON-LD derive from.
+
+## What this site is
+
+ShopKit is a demonstration storefront and a starting template. It is not a real shop:
+no payment provider is connected, no order is ever dispatched, and the catalog in
+`data/products.ts` is mock data. The checkout validates input and totals correctly,
+then shows an example order number and status timeline.
+
+## Stack
+
+- Next.js 16.3 (App Router, Turbopack, async `params`/`searchParams`)
+- React 19, TypeScript 5
+- VivekUI 0.5 for every UI element — no Tailwind, no shadcn, no component CLI
+- Node.js 20.9+ (22 LTS recommended)
+- Zero runtime dependencies beyond React itself
+
+## Pages
+
+- / — storefront: promo countdown, category tiles, trending row with 14-day sales
+  sparklines, best-sellers grid, press logos, testimonials, newsletter, FAQ
+- /shop — all 16 products with category, price-range, rating and stock filters, sort
+  and pagination
+- /product/[slug] — 16 statically prerendered product pages: image carousel, 30-day
+  price-history sparkline, specs table, reviews, related products
+- /checkout — four-step mock checkout (address, shipping, payment, review), noindex
+- /built-with — every VivekUI component used, deep-linked to its documentation
+
+## Product categories
+
+Headphones, watches, sneakers and backpacks — four products each, sixteen in total.
+
+## Frequently asked
+
+Q: How long does shipping take?
+A: Standard shipping takes 3-5 working days and express takes 1-2. Orders placed before
+2pm ship the same day. This is a demo store, so nothing is actually dispatched.
+
+Q: What is the return policy?
+A: Returns are free within 30 days of delivery, for any reason, as long as the item is
+unworn and in its original packaging. Refunds land 3-5 working days after the parcel
+reaches the warehouse.
+
+Q: Is this template really free?
+A: Yes. ShopKit is free and open source under the MIT licence. It can be used
+commercially, changed in any way, and the footer credit can be removed. Keeping the
+credit or starring the repository is appreciated but never required.
+
+Q: Which UI library powers this store?
+A: VivekUI (@the_viveksingh/vivek-ui), a free React component library with zero runtime
+dependencies by Vivek Kumar Singh. Every element — the cart drawer, the command
+palette, the sparklines, the checkout stepper — comes from that one package, installed
+with `npm i @the_viveksingh/vivek-ui` and a single CSS import.
+
+Q: Can it take real payments?
+A: Not as shipped. Adding Stripe, Razorpay or another provider means replacing the final
+checkout step with a real API call.
+
+Q: How do I get a copy of this template?
+A: Either press "Use this template" at
+https://github.com/intellectwithvivek/shopkit/generate for a fresh repository, or run
+`git clone https://github.com/intellectwithvivek/shopkit.git`. Both are free, and the MIT
+licence allows commercial use, modification and removal of the credit.
+
+## Install VivekUI
+
+npm i @the_viveksingh/vivek-ui
+
+Then, once, in your app entry point:
+
+import '@the_viveksingh/vivek-ui/styles.css'
+
+## Licence
+
+MIT. Attribution appreciated, not required.

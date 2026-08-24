@@ -1,26 +1,1277 @@
-@import "tailwindcss";
+/* =========================================================================
+   ShopKit — art direction on top of VivekUI.
+
+   VivekUI ships every selector wrapped in :where(), which has zero
+   specificity, so a single flat class here always wins. Nothing in this file
+   needs !important, and nothing in it should ever grow one.
+
+   Layers:
+     1. Amber accent — retint the library's primary ramp, light and dark.
+     2. Local tokens — the few values that are ShopKit's rather than VivekUI's.
+     3. Signature elements — flat colour-block shapes with cut-out product
+        photography, which is the store's recognisable idea.
+     4. Components — cards, rails, galleries, footer.
+   ========================================================================= */
+
+/* ---------- 1. Amber accent ------------------------------------------------
+   Contrast checked against the surface each pair actually lands on:
+   #b45309 on white is 5.02:1, and #fbbf24 under near-black text is 11.0:1 —
+   both clear WCAG AA for body text, not just for large type.             */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --vk-color-primary: #b45309;
+  --vk-color-primary-fg: #ffffff;
+  --vk-color-primary-hover: #92400e;
+  --vk-color-primary-active: #78350f;
+  --vk-color-primary-subtle: #fef3c7;
+  --vk-color-primary-subtle-fg: #78350f;
+
+  /* Both sparklines read as "the accent", not as a sixth chart colour. */
+  --vk-chart-1: #b45309;
+  --vk-chart-2: #78350f;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme='dark'] {
+  --vk-color-primary: #fbbf24;
+  --vk-color-primary-fg: #1c1207;
+  --vk-color-primary-hover: #fcd34d;
+  --vk-color-primary-active: #f59e0b;
+  --vk-color-primary-subtle: #33240c;
+  --vk-color-primary-subtle-fg: #fcd34d;
+
+  --vk-chart-1: #fbbf24;
+  --vk-chart-2: #fcd34d;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---------- 2. Local tokens ---------------------------------------------- */
+
+:root {
+  /* The flat block colours. Deliberately saturated: they are shapes, never text
+     backgrounds, so they answer to the eye rather than to a contrast ratio. */
+  --sk-amber: #f59e0b;
+  --sk-amber-deep: #d97706;
+  --sk-amber-pale: #fde68a;
+  --sk-amber-wash: #fffbeb;
+
+  --sk-ink: #1d1d1f;
+  --sk-rule: color-mix(in oklab, var(--vk-color-fg) 12%, transparent);
+  --sk-media-bg: var(--sk-amber-wash);
+
+  --sk-shadow-cutout: 0 18px 34px -18px rgb(0 0 0 / 0.45);
+  --sk-radius-block: 8px;
+
+  --sk-font-display: var(--font-display), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+
+  /* Drives the whole library's type, so Buttons and Badges match the page. */
+  --vk-font-sans: var(--font-body), 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+[data-theme='dark'] {
+  --sk-amber-wash: #1a1408;
+  --sk-media-bg: #17130b;
+  --sk-ink: #f5f5f7;
+  --sk-shadow-cutout: 0 18px 34px -16px rgb(0 0 0 / 0.7);
+}
+
+html {
+  /* The navbar is sticky; this keeps in-page anchors from landing under it. */
+  scroll-padding-block-start: 5.5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--vk-font-sans);
+  background: var(--vk-color-bg);
+  color: var(--vk-color-fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display face for every real heading, with the tight tracking it wants. */
+.sk-display,
+h1,
+h2,
+h3 {
+  font-family: var(--sk-font-display);
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+
+.sk-eyebrow {
+  font-family: var(--vk-font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--vk-color-primary-subtle-fg);
+}
+
+[data-theme='dark'] .sk-eyebrow {
+  color: var(--vk-color-primary);
+}
+
+.sk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- 3. Signature: colour blocks + cut-out photography ------------ */
+
+.sk-hero {
+  position: relative;
+  overflow: clip;
+  border-block-end: 1px solid var(--sk-rule);
+  background: var(--sk-amber-wash);
+}
+
+.sk-hero__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+@media (min-width: 62rem) {
+  .sk-hero__grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+}
+
+.sk-hero__copy {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+}
+
+.sk-hero__title {
+  font-size: clamp(2.5rem, 6.4vw, 4.5rem);
+  line-height: 0.98;
+  margin-block: 0.6rem 1rem;
+  text-wrap: balance;
+}
+
+/* The word that sits on its own amber slab. */
+.sk-hero__mark {
+  display: inline-block;
+  padding: 0.02em 0.34em 0.1em;
+  background: var(--sk-amber);
+  color: var(--sk-ink);
+  border-radius: var(--sk-radius-block);
+  transform: rotate(-1.4deg);
+}
+
+[data-theme='dark'] .sk-hero__mark {
+  color: #1c1207;
+}
+
+.sk-hero__lede {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--vk-color-muted);
+  max-width: 30rem;
+}
+
+/*
+  The composition: three flat shapes on a grid, each with one product photo
+  sitting on top of it and hanging slightly over its edge. The overhang is what
+  reads as "cut out" — a photo fully inside its block just looks like a photo in
+  a box.
+*/
+.sk-blocks {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  aspect-ratio: 1 / 0.92;
+  isolation: isolate;
+}
+
+/*
+  One figure = a flat amber slab, plus the same shape again holding the photo,
+  offset off the slab so a hard band of colour shows along two edges. No
+  gradients, no soft shadow: the colour IS the shape.
+
+  `--shape` is set per variant and read by both layers, so the slab and the
+  photo can never disagree about their silhouette.
+*/
+.sk-figure {
+  --shape: var(--sk-radius-block);
+  --offset: 4%;
+  position: relative;
+}
+
+/* Shapes, so the composition is not three rectangles. */
+.sk-figure--arch {
+  --shape: 999px 999px 10px 10px;
+}
+.sk-figure--circle {
+  --shape: 50%;
+}
+
+.sk-figure__slab,
+.sk-figure__photo {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--shape);
+}
+
+.sk-figure__slab {
+  background: var(--sk-amber);
+}
+
+.sk-figure--pale .sk-figure__slab {
+  background: var(--sk-amber-pale);
+}
+.sk-figure--deep .sk-figure__slab {
+  background: var(--sk-amber-deep);
+}
+
+.sk-figure__photo {
+  overflow: clip;
+  transform: translate(var(--offset), calc(-1 * var(--offset)));
+}
+
+.sk-figure__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sk-figure--a {
+  grid-column: 1 / 4;
+  grid-row: 1 / 6;
+}
+.sk-figure--b {
+  grid-column: 4 / 7;
+  grid-row: 2 / 5;
+}
+.sk-figure--c {
+  grid-column: 4 / 6;
+  grid-row: 5 / 7;
+  --offset: 6%;
+}
+
+/* A floating price chip pinned to the composition. */
+.sk-chip {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  background: var(--vk-color-bg);
+  color: var(--vk-color-fg);
+  border: 1px solid var(--sk-rule);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.4);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  inset-block-end: 4%;
+  inset-inline-start: 0;
+}
+
+.sk-chip small {
+  font-weight: 500;
+  color: var(--vk-color-muted);
+}
+
+/* ---------- 4. Sections, tiles, cards ----------------------------------- */
+
+.sk-rule-top {
+  border-block-start: 1px solid var(--sk-rule);
+}
+
+.sk-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 1.75rem;
+}
+
+.sk-section-head h2 {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.1;
+  margin: 0.25rem 0 0;
+}
+
+/* Category tile — the image is the tile, the label sits on a flat amber bar. */
+.sk-tile {
+  position: relative;
+  display: block;
+  overflow: clip;
+  border-radius: 14px;
+  background: var(--sk-media-bg);
+  border: 1px solid var(--sk-rule);
+  text-decoration: none;
+  color: inherit;
+}
+
+.sk-tile:hover {
+  border-color: var(--vk-color-primary);
+}
+
+.sk-tile__img {
+  aspect-ratio: 4 / 3;
+  position: relative;
+}
+
+.sk-tile__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sk-tile__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--sk-amber);
+  color: var(--sk-ink);
+}
+
+[data-theme='dark'] .sk-tile__bar {
+  color: #1c1207;
+}
+
+.sk-tile__bar strong {
+  font-family: var(--sk-font-display);
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.sk-tile__bar span {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+/* Product card. The media panel is a flat wash, never a gradient. */
+.sk-pcard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: clip;
+  border: 1px solid var(--sk-rule);
+  border-radius: 14px;
+  background: var(--vk-color-surface);
+}
+
+.sk-pcard:hover {
+  border-color: var(--vk-color-primary);
+}
+
+.sk-pcard__media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--sk-media-bg);
+  overflow: clip;
+}
+
+.sk-pcard__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sk-pcard__flags {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 0.6rem;
+  inset-inline-start: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.35rem;
+}
+
+.sk-pcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.9rem 0.95rem 1rem;
+}
+
+.sk-pcard__name {
+  font-family: var(--sk-font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.sk-pcard__name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sk-pcard__name a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+
+.sk-pcard__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-start: auto;
+  padding-block-start: 0.25rem;
+}
+
+/* Price */
+.sk-price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-family: var(--sk-font-display);
+  font-weight: 600;
+}
+
+.sk-price__now {
+  font-size: 1.0625rem;
+}
+
+.sk-price__was {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--vk-color-muted);
+  text-decoration: line-through;
+}
+
+.sk-price--lg .sk-price__now {
+  font-size: 1.875rem;
+}
+.sk-price--lg .sk-price__was {
+  font-size: 1rem;
+}
+
+/* The sparkline strip inside a trending card. */
+.sk-spark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block-start: 0.15rem;
+}
+
+.sk-spark__chart {
+  flex: 1;
+  min-width: 0;
+  max-width: 7.5rem;
+}
+
+.sk-spark__delta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #0f7a3d;
+}
+
+[data-theme='dark'] .sk-spark__delta {
+  color: #4ade80;
+}
+
+/* Price-history spark on the product page. */
+.sk-history {
+  border: 1px solid var(--sk-rule);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  background: var(--vk-color-surface-subtle);
+  min-width: 13rem;
+}
+
+.sk-history__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-end: 0.4rem;
+}
+
+.sk-history__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vk-color-muted);
+}
+
+.sk-history__bounds {
+  display: flex;
+  justify-content: space-between;
+  margin-block-start: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--vk-color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Shop: filter rail + results --------------------------------- */
+
+.sk-shop {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .sk-shop {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+.sk-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 60rem) {
+  .sk-rail {
+    position: sticky;
+    inset-block-start: 5.5rem;
+  }
+}
+
+.sk-rail__group {
+  padding-block-end: 1.25rem;
+  border-block-end: 1px solid var(--sk-rule);
+}
+
+.sk-rail__group:last-child {
+  border-block-end: 0;
+  padding-block-end: 0;
+}
+
+.sk-rail__legend {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vk-color-fg);
+  margin-block-end: 0.75rem;
+}
+
+.sk-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block-end: 1rem;
+  margin-block-end: 1.5rem;
+  border-block-end: 1px solid var(--sk-rule);
+}
+
+/* ---------- Product page ------------------------------------------------ */
+
+.sk-pdp {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .sk-pdp {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+
+.sk-gallery__frame {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: clip;
+  background: var(--sk-media-bg);
+  border: 1px solid var(--sk-rule);
+}
+
+.sk-gallery__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sk-pdp__buy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block: 1.25rem;
+}
+
+.sk-pdp__buy > * {
+  flex: 1 1 12rem;
+}
+
+.sk-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.sk-dot {
+  color: var(--sk-rule);
+}
+
+/* ---------- Checkout ---------------------------------------------------- */
+
+.sk-checkout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 58rem) {
+  .sk-checkout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 3rem;
+  }
+}
+
+.sk-summary {
+  border: 1px solid var(--sk-rule);
+  border-radius: 14px;
+  padding: 1.1rem;
+  background: var(--vk-color-surface-subtle);
+}
+
+@media (min-width: 58rem) {
+  .sk-summary {
+    position: sticky;
+    inset-block-start: 5.5rem;
+  }
+}
+
+.sk-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.sk-line--total {
+  border-block-start: 1px solid var(--sk-rule);
+  margin-block-start: 0.5rem;
+  padding-block-start: 0.7rem;
+  font-family: var(--sk-font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.sk-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem;
+}
+
+.sk-span-2 {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Cart drawer ------------------------------------------------- */
+
+.sk-cartline {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.85rem;
+  padding-block: 0.9rem;
+  border-block-end: 1px solid var(--sk-rule);
+}
+
+.sk-cartline:last-of-type {
+  border-block-end: 0;
+}
+
+.sk-cartline__thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: clip;
+  background: var(--sk-media-bg);
+}
+
+.sk-cartline__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sk-cartline__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-start: 0.4rem;
+}
+
+/* The count on the navbar cart button. */
+.sk-cartbtn {
+  position: relative;
+}
+
+.sk-cartbtn__count {
+  position: absolute;
+  inset-block-start: -0.3rem;
+  inset-inline-end: -0.3rem;
+  pointer-events: none;
+}
+
+/* ---------- Logo cloud (inline SVG wordmarks) --------------------------- */
+
+.sk-logo {
+  height: 1.5rem;
+  width: auto;
+  color: var(--vk-color-muted);
+  opacity: 0.75;
+}
+
+/* ---------- Footer ------------------------------------------------------ */
+
+.sk-credit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.1rem;
+  border: 1px solid var(--sk-rule);
+  border-radius: 14px;
+  background: var(--vk-color-surface-subtle);
+  max-width: 34rem;
+  /* Must be allowed to shrink: it holds a nowrap shell command. */
+  min-width: 0;
+}
+
+.sk-install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sk-install code {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+/* ---------- Built-with -------------------------------------------------- */
+
+.sk-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ---------- Motion ------------------------------------------------------
+   Motion is opt-IN rather than opt-out. Every transition and the hover lift
+   live inside this one query, so a visitor who asked their OS for less motion
+   simply never has the rules applied — which needs no `!important` anywhere,
+   and cannot drift out of sync the way a reduce-block has to be maintained.  */
+
+@media (prefers-reduced-motion: no-preference) {
+  .sk-tile,
+  .sk-pcard {
+    transition: transform 160ms ease, border-color 160ms ease;
+  }
+
+  .sk-tile:hover {
+    transform: translateY(-3px);
+  }
+
+  .sk-pcard:hover {
+    transform: translateY(-2px);
+  }
+
+  .sk-pcard__media img {
+    transition: transform 300ms ease;
+  }
+
+  .sk-pcard:hover .sk-pcard__media img {
+    transform: scale(1.035);
+  }
+}
+
+/* ---------- Navbar bits ------------------------------------------------- */
+
+.sk-brand {
+  font-family: var(--sk-font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--vk-color-fg);
+}
+
+.sk-brand__mark {
+  color: var(--vk-color-primary);
+}
+
+/* The promotion badge earns its place on a wide bar, not on a phone. */
+.sk-navbadge {
+  display: none;
+  text-decoration: none;
+}
+
+@media (min-width: 72rem) {
+  .sk-navbadge {
+    display: inline-flex;
+  }
+}
+
+.sk-searchbtn__label,
+.sk-searchbtn__kbd {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .sk-searchbtn__label {
+    display: inline;
+  }
+}
+
+@media (min-width: 56rem) {
+  .sk-searchbtn__kbd {
+    display: inline-flex;
+  }
+}
+
+/* ---------- Skip link --------------------------------------------------- */
+
+.sk-skip {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: -3rem;
+  z-index: 100;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  background: var(--vk-color-primary);
+  color: var(--vk-color-primary-fg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sk-skip:focus-visible {
+  inset-block-start: 0.5rem;
+}
+
+/* ---------- Gallery thumbnails ------------------------------------------ */
+
+.sk-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 0.6rem;
+}
+
+.sk-thumb {
+  position: relative;
+  width: 4.5rem;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  overflow: clip;
+  background: var(--sk-media-bg);
+  cursor: pointer;
+}
+
+.sk-thumb[aria-pressed='true'] {
+  border-color: var(--vk-color-primary);
+}
+
+.sk-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Reviews ----------------------------------------------------- */
+
+.sk-reviews {
+  display: grid;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-width: 44rem;
+}
+
+.sk-review {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  padding-block-end: 1.5rem;
+  border-block-end: 1px solid var(--sk-rule);
+}
+
+.sk-reviews > .sk-review:last-child {
+  border-block-end: 0;
+  padding-block-end: 0;
+}
+
+.sk-review__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  margin-block-end: 0.2rem;
+}
+
+/* ---------- Chart accessible-table clamp -------------------------------- */
+
+/*
+  Every VivekUI chart renders a visually hidden <table> of its values, so screen
+  readers get the numbers rather than "graphic". The library hides it with the
+  standard 1px + clip-path pattern, but two CSS quirks defeat that on a narrow
+  screen:
+
+    1. `inline-size` on a TABLE is a minimum, not a maximum — the table still
+       lays out at min-content width.
+    2. Its `<caption>` inherits `white-space: nowrap`, so the caption cannot
+       wrap and sets that min-content width (~366px measured here).
+
+  The absolutely-positioned result then sticks out past the viewport and drags
+  the whole page into horizontal scroll — 123px of it at a 414px viewport.
+  Clamping the caption as well as the table is what actually contains it.
+
+  Deliberately NOT `overflow: clip` on the chart root: that also works, but it
+  would clip the hover tooltip on the cartesian charts if this template ever
+  grows a LineChart. Zero-specificity `:where()` means these plain selectors win
+  with no `!important`.
+*/
+.vk-chart__table,
+.vk-chart__table caption {
+  max-inline-size: 1px;
+  overflow: hidden;
+}
+
+/* ---------- Open-source top bar ----------------------------------------- */
+
+.sk-topbar {
+  background: var(--sk-ink);
+  color: #f5f5f7;
+  font-size: 0.8125rem;
+  border-block-end: 1px solid rgb(255 255 255 / 0.1);
+}
+
+[data-theme='dark'] .sk-topbar {
+  background: #000;
+  border-block-end-color: rgb(255 255 255 / 0.12);
+}
+
+.sk-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-block-size: 2.5rem;
+  padding-block: 0.4rem;
+  flex-wrap: nowrap;
+}
+
+.sk-topbar__intro {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.sk-topbar__pill {
+  flex: none;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--sk-amber);
+  color: #1c1207;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sk-topbar__tagline {
+  color: rgb(245 245 247 / 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sk-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+}
+
+.sk-topbar__clone {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 0.06);
+  color: #f5f5f7;
+  font-family: var(--vk-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/*
+  The copy button sits on a near-black bar and needs a light treatment.
+
+  `CopyButton` renders a WRAPPER that receives `className`, with the real
+  `<button>` and a live-region span inside it. Styling the wrapper therefore
+  paints a box around the control while the button keeps the library's own
+  near-black text — invisible here. The inner `.vk-button` is the thing to style.
+*/
+.sk-topbar__copy {
+  flex: none;
+  display: inline-flex;
+}
+
+.sk-topbar__copy .vk-button {
+  border-color: rgb(255 255 255 / 0.28);
+  color: #f5f5f7;
+  background: transparent;
+}
+
+.sk-topbar__copy .vk-button:hover {
+  background: rgb(255 255 255 / 0.12);
+  border-color: rgb(255 255 255 / 0.45);
+}
+
+.sk-topbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: none;
+  padding: 0.3rem 0.55rem;
+  border-radius: 7px;
+  color: #f5f5f7;
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sk-topbar__link:hover {
+  background: rgb(255 255 255 / 0.12);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Keyboard focus has to stay visible against a near-black bar. */
+.sk-topbar :focus-visible {
+  outline: 2px solid var(--sk-amber);
+  outline-offset: 2px;
+}
+
+/*
+  Progressive reveal, written mobile-first so each rule only ever ADDS content
+  as room appears. Nothing here wraps to a second row or truncates a control.
+
+  The narrowest layout (320px) is: pill · copy button · GitHub icon.
+    ≥ 26rem  the GitHub link gains its text label
+    ≥ 40rem  the tagline appears, and "Use this template" becomes a link
+    ≥ 64rem  the full `git clone …` command appears
+*/
+
+/* --- base: 320px up --- */
+.sk-topbar__tagline,
+.sk-topbar__linklabel,
+.sk-topbar__clone {
+  display: none;
+}
+
+/* "Use this template" is too wide for a phone; the GitHub link covers it. */
+.sk-topbar__link:not(.sk-topbar__link--icon) {
+  display: none;
+}
+
+@media (min-width: 26rem) {
+  .sk-topbar__linklabel {
+    display: inline;
+  }
+}
+
+@media (min-width: 40rem) {
+  .sk-topbar__tagline {
+    display: inline;
+  }
+  .sk-topbar__link:not(.sk-topbar__link--icon) {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 64rem) {
+  .sk-topbar__clone {
+    display: inline-flex;
+  }
+}
+
+/* ---------- Footer: clone block + credit -------------------------------- */
+
+.sk-footbrand {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/*
+  `min-width: 0` on the children is the whole fix for a narrow screen.
+
+  A grid (and flex) item defaults to `min-width: auto`, which means it refuses to
+  shrink below its own min-content width. The `git clone …` command inside is
+  `white-space: nowrap`, so its min-content is ~380px — the credit box grew to
+  that and pushed past the viewport, taking the clone command out of reach with
+  it. Allowing the item to shrink hands the overflow to the code block, which is
+  already `overflow-x: auto` and can scroll on its own.
+*/
+.sk-footbrand > * {
+  min-width: 0;
+}
+
+@media (min-width: 56rem) {
+  .sk-footbrand {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/*
+  Inline code inside body copy has to be breakable: `@the_viveksingh/vivek-ui/styles.css`
+  on its own is wider than a 320px viewport.
+
+  The command blocks deliberately opt out via `:not()` — they keep `nowrap` and
+  scroll inside themselves instead, because a shell command broken across lines
+  is ambiguous to read and easy to mis-copy by hand.
+*/
+.sk-credit .vk-code:not(.sk-install__code) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The command must be able to shrink and scroll rather than widen the footer. */
+.sk-install__code {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* Keeps a horizontally scrollable box from clipping its own focus ring. */
+  scrollbar-width: thin;
+}
+
+.sk-footcta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/*
+  Anchor styled as a button. A real <a> rather than a Button+onClick, so
+  middle-click, cmd-click and "copy link address" all behave.
+*/
+.sk-btnlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--vk-color-primary);
+  color: var(--vk-color-primary-fg);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sk-btnlink:hover {
+  background: var(--vk-color-primary-hover);
+}
+
+.sk-btnlink--ghost {
+  background: transparent;
+  color: var(--vk-color-fg);
+  border-color: var(--sk-rule);
+}
+
+.sk-btnlink--ghost:hover {
+  background: var(--vk-color-surface-hover);
+  border-color: var(--vk-color-primary);
+}
+
+/* ---------- Clone band (above the footer, every page) ------------------- */
+
+.sk-cloneband {
+  border-block-start: 1px solid var(--sk-rule);
+  background: var(--vk-color-primary-subtle);
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+.sk-cloneband__inner {
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+  min-width: 0;
+}
+
+@media (min-width: 62rem) {
+  .sk-cloneband__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+/* Both tracks must be allowed to shrink below their nowrap content. */
+.sk-cloneband__inner > * {
+  min-width: 0;
+}
+
+.sk-cloneband__title {
+  font-size: clamp(1.5rem, 3.4vw, 2.15rem);
+  line-height: 1.1;
+  margin: 0.3rem 0 0.6rem;
+}
+
+.sk-cloneband__copy code {
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+.sk-cloneband__action {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/*
+  Pagination wrapper. Deliberately a plain block: `.vk-pagination` is a
+  container-query container (`container-type: inline-size`), so making it a flex
+  item collapses it to zero width and locks it into its own narrow-container
+  layout. Full width in, and it centres its own list.
+*/
+.sk-pagination-wrap {
+  margin-block-start: 2rem;
 }
