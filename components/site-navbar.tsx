@@ -18,6 +18,7 @@ import { utm, vivekUI } from '@/lib/site'
 import type { SearchEntry } from '@/lib/search'
 import { useCart } from './cart/cart-provider'
 import { BagIcon, SearchIcon } from './icons'
+import { Logo } from './logo'
 
 /**
  * The site header: category links, ⌘K search over the whole catalog, the cart
@@ -53,9 +54,7 @@ export function SiteNavbar({ entries }: { entries: SearchEntry[] }) {
       <Navbar sticky container="xl">
         <Navbar.Brand asChild>
           <Link href="/" aria-label="ShopKit — home">
-            <span className="sk-brand">
-              Shop<span className="sk-brand__mark">Kit</span>
-            </span>
+            <Logo size={26} />
           </Link>
         </Navbar.Brand>
 

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Bricolage_Grotesque, Inter } from 'next/font/google'
 import { ThemeProvider, ToastProvider, themeScript } from '@the_viveksingh/vivek-ui'
 
@@ -59,6 +59,20 @@ export const metadata: Metadata = {
     description: site.description,
   },
   robots: { index: true, follow: true },
+}
+
+/**
+ * `theme-color` tints the browser's own chrome on mobile, so it should match
+ * whatever sits at the very top of the page — here that is the near-black
+ * open-source bar, not the amber accent. Matching the accent instead would put
+ * an amber strip above a black bar.
+ */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#1d1d1f' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
+  colorScheme: 'light dark',
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

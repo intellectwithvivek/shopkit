@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { Button, Container, EmptyState, Section } from '@the_viveksingh/vivek-ui'
+import { LogoMark } from '@/components/logo'
 
 export default function NotFound() {
   return (
     <Section padding="xl" size="md">
       <Container size="full" flush>
         <EmptyState
+          icon={<LogoMark size={44} />}
           size="lg"
           headingLevel={1}
           title="We cannot find that page"

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { BRAND } from '@/lib/brand'
 
 /**
  * The default social card for every route that does not supply its own.
@@ -30,35 +31,30 @@ export default function OpengraphImage() {
           fontFamily: 'sans-serif',
         }}
       >
-        {/* The amber slabs, echoing the hero's art direction. */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        {/* The real mark, so the social card and the browser tab agree. */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
+          <svg width="76" height="76" viewBox="0 0 32 32">
+            <rect width="32" height="32" rx={BRAND.radius} fill={BRAND.amber} />
+            <path
+              d={BRAND.handle}
+              fill="none"
+              stroke={BRAND.ink}
+              strokeWidth={BRAND.handleWidth}
+              strokeLinecap="round"
+            />
+            <path d={BRAND.body} fill={BRAND.ink} />
+          </svg>
           <div
             style={{
               display: 'flex',
-              width: '54px',
-              height: '54px',
-              backgroundColor: '#f59e0b',
-              borderRadius: '54px 54px 8px 8px',
+              fontSize: '44px',
+              fontWeight: 700,
+              color: '#1d1d1f',
+              letterSpacing: '-1.5px',
             }}
-          />
-          <div
-            style={{
-              display: 'flex',
-              width: '54px',
-              height: '54px',
-              backgroundColor: '#fde68a',
-              borderRadius: '8px',
-            }}
-          />
-          <div
-            style={{
-              display: 'flex',
-              width: '54px',
-              height: '54px',
-              backgroundColor: '#d97706',
-              borderRadius: '999px',
-            }}
-          />
+          >
+            ShopKit
+          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -76,25 +72,27 @@ export default function OpengraphImage() {
           <div
             style={{
               display: 'flex',
-              fontSize: '92px',
+              fontSize: '74px',
               fontWeight: 700,
               color: '#1d1d1f',
-              letterSpacing: '-3px',
+              letterSpacing: '-2.5px',
               marginTop: '12px',
+              lineHeight: 1.1,
             }}
           >
-            ShopKit
+            A Next.js 16 store,
           </div>
           <div
             style={{
               display: 'flex',
-              fontSize: '38px',
-              color: '#57534e',
-              marginTop: '10px',
-              lineHeight: 1.3,
+              fontSize: '74px',
+              fontWeight: 700,
+              color: '#92400e',
+              letterSpacing: '-2.5px',
+              lineHeight: 1.1,
             }}
           >
-            A Next.js 16 e-commerce template
+            ready to clone
           </div>
         </div>
 

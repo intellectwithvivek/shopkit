@@ -1275,3 +1275,18 @@ h3 {
 .sk-pagination-wrap {
   margin-block-start: 2rem;
 }
+
+/* ---------- Logo lockup ------------------------------------------------- */
+
+.sk-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+/* The mark is a fixed square; only the wordmark should ever compress. */
+.sk-lockup svg {
+  flex: none;
+  display: block;
+}

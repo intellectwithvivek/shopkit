@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:brand": "node scripts/check-brand.mjs"
   },
   "dependencies": {
     "@the_viveksingh/vivek-ui": "^0.5.0",

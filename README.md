@@ -54,9 +54,10 @@ npm run dev
 Open <http://localhost:3000>.
 
 ```bash
-npm run build   # production build
-npm start       # serve the build
-npm run lint    # eslint
+npm run build        # production build
+npm start            # serve the build
+npm run lint         # eslint
+npm run check:brand  # assert app/icon.svg still matches lib/brand.ts
 ```
 
 Starting a real project rather than reading this one? Use
@@ -87,6 +88,25 @@ Almost everything lives in two files.
 - **`app/globals.css`** — the art direction. The amber accent is four CSS custom properties at the top of the file; change `--vk-color-primary` and its ramp to rebrand the entire site, VivekUI components included.
 
 VivekUI wraps every one of its own selectors in `:where()`, which has zero specificity — so a single flat class of your own always wins, and there is no `!important` anywhere in this project.
+
+### Swapping the logo
+
+The mark is defined once, as data, in [`lib/brand.ts`](lib/brand.ts) — two SVG paths, a
+corner radius and two colours on a 32-unit grid. Every surface derives from it:
+
+| Surface | File | Notes |
+|---|---|---|
+| Navbar, 404 | `components/logo.tsx` | Mark + live-text wordmark |
+| Browser tab | `app/icon.svg` | SVG favicon, crisp at any size |
+| Legacy tab / bookmarks | `app/favicon.ico` | Multi-size: 16→256 |
+| iOS home screen | `app/apple-icon.png` | 180×180, full-bleed (iOS masks it itself) |
+| Android / PWA | `public/icon-192.png`, `public/icon-512.png` | Declared in `app/manifest.ts` |
+| Social cards | `app/opengraph-image.tsx` | Generated at build by `next/og` |
+
+Edit `lib/brand.ts` and the React surfaces update immediately. The raster files
+(`favicon.ico`, `apple-icon.png`, `icon-*.png`) are committed binaries and need
+regenerating by hand. `npm run check:brand` fails the build if `app/icon.svg` — the one
+static copy of the geometry — has drifted from the constants.
 
 ## Zero runtime dependencies
 
