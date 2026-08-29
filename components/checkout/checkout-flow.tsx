@@ -241,7 +241,7 @@ export function CheckoutFlow() {
               name="shipping"
               label="How should we send it?"
               value={shipping}
-              onChange={setShipping}
+              onValueChange={setShipping}
               options={SHIPPING.map((option) => ({
                 value: option.value,
                 label: `${option.label} — ${
@@ -271,7 +271,7 @@ export function CheckoutFlow() {
                 name="payment"
                 label="How would you like to pay?"
                 value={payment}
-                onChange={setPayment}
+                onValueChange={setPayment}
                 options={PAYMENTS.map((option) => ({
                   value: option.value,
                   label: option.label,

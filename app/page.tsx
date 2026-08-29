@@ -331,7 +331,7 @@ export default function HomePage() {
         eyebrow="Questions"
         title="Shipping, returns, and this template"
         name="shopkit-faq"
-        defaultOpen={0}
+        defaultOpenIndex={0}
         items={faqEntries.map((entry) => ({
           id: entry.id,
           question: entry.question,
